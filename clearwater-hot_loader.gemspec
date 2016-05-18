@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["jgaskins@gmail.com"]
 
   spec.summary       = %q{Reload your Clearwater app without refreshing the browser}
-  spec.homepage      = "TODO: Put your gem's website or public repo URL here."
+  spec.homepage      = "https://github.com/clearwater-rb/clearwater-hot_loader"
 
   spec.files         = `git ls-files -z`.split("\x0").reject { |f| f.match(%r{^(test|spec|features)/}) }
   spec.bindir        = "exe"
