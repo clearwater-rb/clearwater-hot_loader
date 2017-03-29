@@ -16,11 +16,13 @@ module Clearwater
         if WebSocket.websocket? env
           ws = WebSocket.new(env)
 
+          ws.on :open do
+            hot_loader.add_socket ws
+          end
+
           ws.on :close do
             hot_loader.remove_socket ws
           end
-
-          hot_loader.add_socket ws
 
           ws.rack_response
         else
