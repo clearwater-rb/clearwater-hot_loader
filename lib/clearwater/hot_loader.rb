@@ -31,13 +31,13 @@ module Clearwater
           begin
             puts "[Clearwater::HotLoader] Compiling #{filename}..."
             code = server.compile_file(filename)
-            puts "[Clearwater::HotLoader] Hot-loading #{filename}..."
-
-            sockets.each do |ws|
-              ws.send code
-            end
-          rescue => e
+          rescue SyntaxError => e
             puts "ONOES! #{e.class} - #{e.message}"
+          end
+
+          puts "[Clearwater::HotLoader] Hot-loading #{filename}..."
+          sockets.each do |ws|
+            ws.send code
           end
         end
       }
