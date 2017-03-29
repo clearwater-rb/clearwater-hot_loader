@@ -7,9 +7,7 @@ module Clearwater
         candidate_directories = Dir[
           *%w(
             app/assets/javascripts
-            app/assets/javascripts/**/*
-            assets
-            assets/**/*
+            assets/js
           )
         ]
         self.directories = candidate_directories

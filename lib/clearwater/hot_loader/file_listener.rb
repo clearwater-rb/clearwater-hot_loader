@@ -7,7 +7,7 @@ module Clearwater
         @directory = directory
 
         @listener = Listen.to(directory) do |modified, added, removed|
-          (modified + added).each do |file|
+          (modified + added).uniq.each do |file|
             block.call(file)
           end
         end
