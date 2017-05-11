@@ -34,11 +34,17 @@ module Clearwater
       @socket.on :message do |msg|
         begin
           %x{ eval(msg.native.data) }
+
+          # We need to perform the renders synchronously so we can rescue
+          # exceptions, but the app registry doesn't give us a way to do that,
+          # so we reach in and do this manually. Don't try this at home.
+          Clearwater::Application::AppRegistry
+            .instance_exec { @apps }
+            .each { |app| app.perform_render }
         rescue => e
           error_message = "[Clearwater::HotLoader] Error #{e.class}: #{e.message}"
           `console.error(error_message)`
         end
-        Clearwater::Application.render
       end
 
       @socket.on :close do
