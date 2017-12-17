@@ -6,11 +6,15 @@ module Clearwater
   class HotLoader
     attr_reader :port, :path
 
-    def self.connect port=3000, path='/clearwater_hot_loader'
-      new(port, path).connect
+    def self.connect port=nil, deprecated_path=nil, path: '/clearwater_hot_loader'
+      if deprecated_path
+        warn "[Clearwater::HotLoader] Passing the path as a positional argument is deprecated. Please pass the path as a keyword argument."
+      end
+
+      new(port, path: deprecated_path || path).connect
     end
 
-    def initialize port, path='/clearwater_hot_loader'
+    def initialize port=nil, path: '/clearwater_hot_loader'
       @port = port
       @path = path
       Bowser.window.animation_frame do
