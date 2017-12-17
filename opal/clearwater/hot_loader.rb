@@ -29,7 +29,10 @@ module Clearwater
     end
 
     def connect
-      @socket = Bowser::WebSocket.new("ws://localhost:#{port}#{path}")
+      match, scheme, host, port, = *Bowser.window.location.href.match(%r{(https?)://([^:/]+)(?:\:(\d+))?/?([^\?]*)})
+      port = @port if @port
+      socket_url = "ws#{'s' if scheme == 'https'}://#{host}#{":#{port}" if port}#{path}"
+      @socket = Bowser::WebSocket.new(socket_url)
 
       @socket.on :open do
         @app.render
