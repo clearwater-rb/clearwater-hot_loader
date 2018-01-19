@@ -59,7 +59,7 @@ To connect to the server, simply add this to the top of your Clearwater app:
 
 ```ruby
 require 'clearwater/hot_loader'
-Clearwater::HotLoader.connect port
+Clearwater::HotLoader.connect
 ```
 
 Simply replace `port` with the port number on which your app is running. It will be the same port on which your web app is running. For example, if you usually open `localhost:3000` to load your web app in the browser, you'll want to connect to port 3000.
