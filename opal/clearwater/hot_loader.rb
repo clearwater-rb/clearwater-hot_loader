@@ -17,6 +17,7 @@ module Clearwater
     def initialize port=nil, path: '/clearwater_hot_loader'
       @port = port
       @path = path
+      @app = InitialApp.new
       Bowser.window.animation_frame do
         div = Bowser.document.create_element('div')
         Bowser.document.body.append div
@@ -97,6 +98,11 @@ module Clearwater
           background_color: connected ? :green : :red,
           color: :white,
         }
+      end
+    end
+
+    class InitialApp
+      def render
       end
     end
   end
