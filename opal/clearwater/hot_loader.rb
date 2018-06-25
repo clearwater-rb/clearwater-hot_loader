@@ -40,18 +40,29 @@ module Clearwater
       end
 
       @socket.on :message do |msg|
-        begin
-          %x{ eval(msg.native.data) }
+        data = msg.data
+        if data.key? :js
+          begin
+            %x{ eval(#{data[:js]}) }
 
-          # We need to perform the renders synchronously so we can rescue
-          # exceptions, but the app registry doesn't give us a way to do that,
-          # so we reach in and do this manually. Don't try this at home.
-          Clearwater::Application::AppRegistry
-            .instance_exec { @apps }
-            .each { |app| app.perform_render }
-        rescue => e
-          error_message = "[Clearwater::HotLoader] Error #{e.class}: #{e.message}"
-          `console.error(error_message)`
+            # We need to perform the renders synchronously so we can rescue
+            # exceptions, but the app registry doesn't give us a way to do that,
+            # so we reach in and do this manually. Don't try this at home.
+            Clearwater::Application::AppRegistry
+              .instance_exec { @apps }
+              .each { |app| app.perform_render }
+          rescue => e
+            error_message = "[Clearwater::HotLoader] Error #{e.class}: #{e.message}"
+            `console.error(error_message)`
+          end
+        elsif data.key? :css
+          id = "clearwater-hot-loader-style-#{data[:css][:filename].gsub(/\W/, '-')}"
+          style = Bowser.document["##{id}"] || Bowser.document.create_element(:style)
+          new_element = style.id.empty?
+          style.id = id
+          style.text_content = data[:css][:body]
+
+          Bowser.document.head.append style if new_element
         end
       end
 

@@ -34,14 +34,17 @@ module Clearwater
         code = File.read(filename)
 
         if filename.end_with? '.rb'
-          Opal.compile(code)
+          { js: Opal.compile(code) }
         elsif filename.end_with? '.js'
-          code
+          { js: code }
+        elsif filename.end_with? '.scss'
+          { css: { filename: filename, body: Sass.compile(code.gsub(/^\s*@import.*$/, '')) } }
         else
-          ''
+          {}
         end
       rescue => e
-        ''
+        warn "[Clearwater::HotLoader] #{e}"
+        {}
       end
     end
   end

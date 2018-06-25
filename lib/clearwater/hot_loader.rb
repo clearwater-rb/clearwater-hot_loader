@@ -3,6 +3,7 @@ require 'clearwater/hot_loader/server'
 require 'clearwater/hot_loader/file_listener'
 require 'clearwater/hot_loader/configuration'
 require 'set'
+require 'json'
 
 module Clearwater
   module HotLoader
@@ -33,11 +34,12 @@ module Clearwater
             code = server.compile_file(filename)
           rescue SyntaxError => e
             puts "ONOES! #{e.class} - #{e.message}"
+            code = {}
           end
 
           puts "[Clearwater::HotLoader] Hot-loading #{filename}..."
           sockets.each do |ws|
-            ws.send code
+            ws.send code.to_json
           end
         end
       }
